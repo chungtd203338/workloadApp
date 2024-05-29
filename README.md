@@ -9,7 +9,7 @@ It also enables the **mod_status** of the httpd server, so that user can have a 
 
 
 # Build docker image #
-Build a docker image. (`beekman9527/webapp` is the image in dockerhub)
+Build a docker image. (`chung123abc/webapp` is the image in dockerhub)
 ```console
 $ export imageName="webapp"
 $ docker build -t $imageName .
@@ -72,36 +72,51 @@ Access it via curl Post
 curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d 'cpu=30' http://localhost:28080/cpuwork.php
 ```
 
-# Stable workload generator #
-[webclient](https://github.com/songbinliu/webclient) can be used to generate stable workload for this webApp.
-This `webclient` can also deployed in the same Kubernetes cluster to send requests to this webApp.
-```yaml
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: httpclient
-  namespace: default
-  labels:
-    purpose: generate-http-load
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: httpclient
-  template:
-    metadata:
-      labels:
-        app: httpclient
-    spec:
-      serviceAccount: default
-      containers:
-      - name: httpclient
-        image: beekman9527/webclient:v1
-        imagePullPolicy: IfNotPresent
-        args:
-        - --v=3
-        - --threadNum=6
-        - --logtostderr
-        - --target=http://music.default:8080/cpuwork.php/?cpu=20
-        - --rps=2
+
+### CPU and Memory intensive simulation ###
+It will use as much CPU as possible to compute the MD5 for huge amout of integers. 
+**memory** is amount of memory (in MB) to consume; the other is **value**, the duration to hold the 
+memory, in milliseconds.
+
+Access it via web browser
+```console
+http://localhost:28080/incorporate.php/?value=110&memory=10&cpu=10
 ```
+Access it via curl Post
+```console
+curl -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d 'value=110&memory=10&cpu=10' http://localhost:28080/incorporate.php
+```
+
+;; # Stable workload generator #
+;; [webclient](https://github.com/songbinliu/webclient) can be used to generate stable workload for this webApp.
+;; This `webclient` can also deployed in the same Kubernetes cluster to send requests to this webApp.
+;; ```yaml
+;; apiVersion: extensions/v1beta1
+;; kind: Deployment
+;; metadata:
+;;   name: httpclient
+;;   namespace: default
+;;   labels:
+;;     purpose: generate-http-load
+;; spec:
+;;   replicas: 2
+;;   selector:
+;;     matchLabels:
+;;       app: httpclient
+;;   template:
+;;     metadata:
+;;       labels:
+;;         app: httpclient
+;;     spec:
+;;       serviceAccount: default
+;;       containers:
+;;       - name: httpclient
+;;         image: beekman9527/webclient:v1
+;;         imagePullPolicy: IfNotPresent
+;;         args:
+;;         - --v=3
+;;         - --threadNum=6
+;;         - --logtostderr
+;;         - --target=http://music.default:8080/cpuwork.php/?cpu=20
+;;         - --rps=2
+;; ```

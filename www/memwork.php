@@ -5,7 +5,7 @@
     if ($num < 1) {
         $num = intval($_POST['value']);
     }
-    
+   
     if ($memnum < 1) {
         $memnum = intval($_POST['memory']);
     }
@@ -23,7 +23,7 @@
         $memnum = 1;
     }
     
-    $maxnum = 2048;
+    $maxnum = 4096;
     if($memnum > $maxnum) {
         echo "memory usage limit: [1--$maxnum]MB. <br>";
         $memnum = $maxnum;
@@ -45,14 +45,14 @@
     #$bigmem = array_fill(0, $rmemnum, '');
     
     $usedMem = round(memory_get_usage()/(1024*1024.0), 2);
-    echo "memory used 1: <b> $usedMem MB </b>.";
+    echo "memory used: <b> $usedMem MB </b>.";
 
     usleep(1000*$rnum);
 
     unset($bigmem);
     echo "<br><br>free memory...<br><br>";
     $usedMem = round(memory_get_usage()/(1024*1024.0), 2);
-    echo "memory used 2: <b> $usedMem MB </b>.";
+    // echo "memory used 2: <b> $usedMem MB </b>.";
 
     echo "</center> </p>";
     include 'footer.php';

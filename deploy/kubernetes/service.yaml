@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: fake-service
+  name: workload-service
 spec:
   selector:
-    app: fake-app-pods
-  type: LoadBalancer
+    app: workload-app-pods
+  type: NodePort
   ports:
   - protocol: TCP
     port: 80
